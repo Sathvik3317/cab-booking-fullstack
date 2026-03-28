@@ -55,7 +55,7 @@ onRegistered();   // switch to login tab
         onChange={e => setPassword(e.target.value)}
       />
 
-<button className="primary-btn">Register</button>
+<button className="primary-btn" onClick={handleRegister}>Register</button>
     </div>
   );
 }

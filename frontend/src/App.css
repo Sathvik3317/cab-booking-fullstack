@@ -4,6 +4,10 @@ body {
   background: #f4f6f8;
 }
 
+.app-shell {
+  min-height: 100vh;
+}
+
 .app-container {
   max-width: 900px;
   margin: auto;
@@ -47,15 +51,17 @@ h1 {
 
 input {
   width: 100%;
-  padding: 8px;
+  padding: 12px 14px;
   margin-bottom: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  color: #0f172a;
 }
 
 button {
-  padding: 8px 14px;
-  border-radius: 4px;
+  padding: 10px 16px;
+  border-radius: 10px;
   border: none;
   cursor: pointer;
 }

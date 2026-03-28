@@ -5,23 +5,19 @@ import Header from "./component/Header";
 import Footer from "./component/Footer";
 
 function App() {
-
   const [user, setUser] = useState(null);
 
   return (
-    <div>
-
+    <div className="app-shell">
       <Header
         user={user}
         onLogout={() => setUser(null)}
       />
 
       {!user && <AuthPage onLogin={setUser} />}
-
       {user && <Dashboard user={user} />}
 
       <Footer />
-
     </div>
   );
 }

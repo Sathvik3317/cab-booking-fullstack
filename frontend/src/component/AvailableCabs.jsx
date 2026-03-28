@@ -1,49 +1,34 @@
-import React from 'react'
 import { useEffect, useState } from "react";
 
 function AvailableCabs({ user, onActionDone, reloadKey }) {
- // State to store list of available cabs from backend
   const [cabs, setCabs] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
-  // For pickup and drop input
   const [pickup, setPickup] = useState("");
   const [drop, setDrop] = useState("");
 
-  // Fetch all available cabs from backend
-  // GET /api/cabs/available
   const fetchAvailableCabs = async () => {
-    try{
-    const response = await fetch( // pause this line ,wait till the API response comes, then store it in response
-      "http://localhost:8080/api/cabs/available"
-    );
-    // If backend returns error status (401, 500 etc)
+    try {
+      const response = await fetch("http://localhost:8080/api/cabs/available");
+
       if (!response.ok) {
         throw new Error("Failed to fetch cabs");
       }
-    // Convert response JSON to JavaScript object
-    const data = await response.json();  // conv of backend to j son takes time so wait until JSON is fully read.
-   // Store result in state
-    setCabs(data);
+
+      const data = await response.json();
+      setCabs(data);
     } catch (error) {
       console.error("Error while loading cabs", error);
       alert("Unable to load cabs");
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Called when page loads
   useEffect(() => {
     fetchAvailableCabs();
   }, [reloadKey]);
 
-  /*
-   * Calls POST /api/bookings
-   * and books the selected cab
-   */
-  const bookCab = async (cabId) => { // booking is an API call, takes time, must wait for server response
-
-    // Basic validation
+  const bookCab = async (cabId) => {
     if (!pickup || !drop) {
       alert("Please enter pickup and drop location");
       return;
@@ -67,58 +52,49 @@ function AvailableCabs({ user, onActionDone, reloadKey }) {
     }
 
     alert("Cab booked successfully");
-
-    onActionDone();   // tell parent to refresh both screens
-
-    
+    onActionDone();
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-
+    <section className="panel">
       <h2>Available Cabs</h2>
+      <p className="panel-subtitle">Choose pickup and drop points before booking a ride.</p>
 
-      {/* Input for pickup location */}
-      <input
-        type="text"
-        placeholder="Pickup location"
-        value={pickup}
-        onChange={(e) => setPickup(e.target.value)}
-      />
+      <div className="trip-form">
+        <input
+          type="text"
+          placeholder="Pickup location"
+          value={pickup}
+          onChange={(e) => setPickup(e.target.value)}
+        />
 
-      {/* Input for drop location */}
-      <input
-        type="text"
-        placeholder="Drop location"
-        value={drop}
-        onChange={(e) => setDrop(e.target.value)}
-        style={{ marginLeft: "10px" }}
-      />
+        <input
+          type="text"
+          placeholder="Drop location"
+          value={drop}
+          onChange={(e) => setDrop(e.target.value)}
+        />
+      </div>
 
-      <br /><br />
+      {loading && <p className="empty-state">Loading available cabs...</p>}
+      {!loading && cabs.length === 0 && <p className="empty-state">No cabs available right now.</p>}
 
-      {/* Show available cabs */}
-      <ul>
+      <ul className="cab-list">
         {cabs.map((cab) => (
-          <li key={cab.id}>
+          <li key={cab.id} className="cab-item">
+            <div className="cab-meta">
+              <span className="meta-title">{cab.driverName}</span>
+              <span className="meta-subtitle">Car Number: {cab.carNumber}</span>
+            </div>
 
-            Driver : {cab.driverName} |
-            Car : {cab.carNumber}
-
-            <button
-              style={{ marginLeft: "10px" }}
-              onClick={() => bookCab(cab.id)}
-            >
+            <button className="secondary-btn" onClick={() => bookCab(cab.id)}>
               Book
             </button>
-
           </li>
         ))}
       </ul>
-
-    </div>
+    </section>
   );
-
 }
 
-export default AvailableCabs
+export default AvailableCabs;
