@@ -1,0 +1,11 @@
+# Backend (Spring Boot)
+backend/target/
+
+# Frontend (React)
+frontend/node_modules/
+
+# Environment files
+.env
+
+# OS files
+.DS_Store
